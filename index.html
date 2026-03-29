@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Valley School | Excellence in Education</title>
+    <!-- Tailwind CSS for Styling -->
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <style>
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-green-700 text-white p-4 sticky top-0 z-50 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold cursor-pointer" onclick="showPage('home')">Green Valley School</h1>
+            <div class="space-x-6 hidden md:flex">
+                <button onclick="showPage('home')" class="hover:underline">Home</button>
+                <button onclick="showPage('about')" class="hover:underline">About</button>
+                <button onclick="showPage('contact')" class="hover:underline">Contact</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <main id="home" class="page-section active">
+        <div class="h-[70vh] bg-cover bg-center flex items-center justify-center text-center text-white" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('[https://images.unsplash.com/photo-1523050853064-88d30e927c44?auto=format&fit=crop&w=1200&q=80](https://images.unsplash.com/photo-1523050853064-88d30e927c44?auto=format&fit=crop&w=1200&q=80)');">
+            <div>
+                <h2 class="text-5xl font-extrabold mb-4">Shaping Future Leaders</h2>
+                <p class="text-xl mb-6">Join a community dedicated to academic excellence and personal growth.</p>
+                <button onclick="showPage('about')" class="bg-green-600 px-8 py-3 rounded-full font-bold hover:bg-green-500 transition">Learn More</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- About Page -->
+    <main id="about" class="page-section container mx-auto p-8">
+        <h2 class="text-3xl font-bold text-green-700 border-b-2 border-green-700 pb-2 mb-6">Our Mission</h2>
+        <p class="text-lg leading-relaxed">Founded in 1995, Green Valley School has been at the forefront of innovative education. We believe in holistic development, combining rigorous academics with character building.</p>
+    </main>
+
+    <!-- Contact Page -->
+    <main id="contact" class="page-section container mx-auto p-8">
+        <h2 class="text-3xl font-bold text-green-700 mb-6">Contact Us</h2>
+        <!-- Added id="inquiryForm" so JavaScript can find it -->
+        <form id="inquiryForm" class="max-w-lg bg-white p-6 rounded-lg shadow-lg">
+            <div class="mb-4">
+                <label class="block mb-2 font-bold">Parent Name</label>
+                <input type="text" id="parentName" class="w-full border p-2 rounded" placeholder="Your Name" required>
+            </div>
+            <div class="mb-4">
+                <label class="block mb-2 font-bold">Email</label>
+                <input type="email" id="parentEmail" class="w-full border p-2 rounded" placeholder="email@example.com" required>
+            </div>
+            <button type="submit" class="w-full bg-green-700 text-white py-2 rounded font-bold hover:bg-green-600">Send Inquiry</button>
+        </form>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-10 mt-12">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2024 Green Valley School. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Logic: JavaScript -->
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "[https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js](https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js)";
+        import { getFirestore, collection, addDoc } from "[https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js](https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js)";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCUEq2CuweL4N-nSl-GHrnRTDhiV7iSGNQ",
+            authDomain: "school-website-79b15.firebaseapp.com",
+            projectId: "school-website-79b15",
+            storageBucket: "school-website-79b15.firebasestorage.app",
+            messagingSenderId: "96919334834",
+            appId: "1:96919334834:web:4ec8b2122e8a2d4777feab"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Connect Form to Firestore
+        const form = document.getElementById('inquiryForm');
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('parentName').value;
+                const email = document.getElementById('parentEmail').value;
+
+                try {
+                    await addDoc(collection(db, "inquiries"), {
+                        parentName: name,
+                        parentEmail: email,
+                        timestamp: new Date()
+                    });
+                    alert("Inquiry Sent Successfully!");
+                    form.reset();
+                } catch (error) {
+                    console.error("Error adding document: ", error);
+                    alert("Error sending inquiry. Check console for details.");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
